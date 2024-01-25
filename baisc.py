@@ -405,97 +405,16 @@ class Interpreter:
 
     def parse(self):
         tokens = self.tokens
-        resualt = 0
-        number = None
-        op = None
-        isneg = False
-        onenum = True
+        pos = 0
         if tokens is []:
             return 0, None
         elif type(tokens) == None:
             return 0, None
         elif type(tokens) == Token:
             tokens = [tokens]
-        for idx, item in enumerate(tokens):
-            if type(item) == list:
-                toadd, _ = Parser(item).parse()
-                if _ != None and toadd == None:
-                    return None, _
-                elif toadd == None:
-                    continue
-                elif '.' in str(toadd):
-                    item = Token(TT_FLOAT, idx, idx + len(str(toadd)), toadd)
-                else:
-                    item = Token(TT_INT, idx, idx + len(str(toadd)), toadd)
-            if item.type == TT_LPAREN:
-                toadd, _ = Parser(tokens[idx + 1:], True).parse()
-                if _ != None and toadd == None:
-                    return None, _
-                elif toadd == None:
-                    continue
-                elif '.' in str(toadd):
-                    item = Token(TT_FLOAT, idx, idx + len(str(toadd)), toadd)
-                else:
-                    item = Token(TT_INT, idx, idx + len(str(toadd)), toadd)
-            else:
-                if item.type in (TT_INT, TT_FLOAT):
-                    if number == None:
-                        if isneg:
-                            number = Token(item.type, item.pos_start,
-                                           item.pos_end, -item.value)
-                            isneg = False
-                        else:
-                            number = item
-                    elif number != None and op != None:
-                        if op.type == TT_PLUS:
-                            resualt = number.value + item.value
-                        elif op.type == TT_MINUS:
-                            resualt = number.value - item.value
-                        elif op.type == TT_MUL:
-                            resualt = number.value * item.value
-                        elif op.type == TT_DIV:
-                            resualt = number.value / item.value
-                        elif op.type == TT_POW:
-                            resualt = number.value**item.value
-                        number = None
-                        op = None
-                    else:
-                        return None, Error(
-                            idx, idx, "Can't have two numbers",
-                            "You can't have two numbers, BUDDY"
-                        )  #TODO: write an actual error before we put this in prod
-                elif item.type == TT_PLUS:
-                    op = item
-                    onenum = False
-                elif item.type == TT_MINUS:
-                    if number != None:
-                        op = item
-                        onenum = False
-                    else:
-                        isneg = True
-                elif item.type == TT_MUL:
-                    op = item
-                    onenum = False
-                elif item.type == TT_DIV:
-                    op = item
-                    onenum = False
-                elif item.type == TT_POW:
-                    op = item
-                    onenum = False
-            if self.isparen == True and idx == len(tokens) - 1:
-                if item.type != TT_RPAREN:
-                    return None, Error(
-                        idx, idx, "Syntax Error", "\"(\""
-                    )  #TODO: write an actual error before we put this in prod
-            if item.type == TT_RPAREN:
-                if resualt == None:
-                    return 0, None
-                else:
-                    return number.value if onenum or item == None else resualt, None
-        if resualt == None:
-            return 0, None
-        else:
-            return number.value if onenum or item == None else resualt, None
+            
+        while pos < len(tokens):
+            pass #I will do major refactor here just psuhing some things
 
 
 #######################################
